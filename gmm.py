@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.cluster import KMeans
+import statistics as stats
 
 class GMM:
     def __init__(self, n_components, n_iter=10):
