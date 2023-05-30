@@ -152,17 +152,6 @@ if __name__ == "__main__":
     df = pd.DataFrame(results_kmeans, columns=['K', 'Umbral', 'Purity'])
     df.to_csv('kmeans_results.csv', index=False)
 
-    # eps = [0.3]
-    # min_samples = [3]
-
-    # for e in eps:
-    #     for m in min_samples:
-    #         execute_dbscan(data_scaled, e, m)
-
-    # # Save dbscan_results to csv
-    # df = pd.DataFrame(results_dbscan, columns=['Eps', 'Min_samples', 'Purity'])
-    # df.to_csv('dbscan_results.csv', index=False)
-    
     # Save gmm_results to csv
     ite = [2,3,5,7,10,20]
     for i in ite:
@@ -170,4 +159,5 @@ if __name__ == "__main__":
     
     df = pd.DataFrame(results_gmm, columns = ['Iterations', 'Purity'])
     df.to_csv('gmm_results.csv', index=False)
+
     
