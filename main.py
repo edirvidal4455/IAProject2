@@ -168,4 +168,29 @@ if __name__ == "__main__":
     purity_value = purity(cluster_labels, labels)
 
     print("Purity:", purity_value)
+    def plot_clusters(data, cluster_labels):
+    # Crear un diccionario para almacenar los puntos de cada cluster
+    clusters = {}
+
+    # Agrupar los puntos según sus etiquetas de cluster
+    for i, label in enumerate(cluster_labels):
+        if label not in clusters:
+            clusters[label] = []
+        clusters[label].append(data[i])
+
+    plt.figure(figsize=(8, 8))
+    colors = cycle('bgrcmyk')
+    for label, points in clusters.items():
+        points = np.array(points)
+        x = points[:, 0]
+        y = points[:, 1]
+
+
+        color = next(colors)
+        plt.scatter(x, y, c=color,)
+    plt.legend()
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.show()
+    plot_clusters(data, cluster_labels)
     
