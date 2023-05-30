@@ -10,6 +10,11 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import silhouette_score
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
+results_kmeans = []
+results_dbscan = []
+results_gmm = []
 
 def Get_Feature(picture, cortes):
     LL = picture
@@ -49,13 +54,13 @@ def purity(clusters, labels):
     total = 0
     for label in cluster_labels:
         cluster_indices = np.where(clusters == label)[0]
-        cluster_labels = labels[cluster_indices]
-        unique_labels, label_counts = np.unique(cluster_labels, return_counts=True)
-        total += np.max(label_counts)
+        cluster_emotions = labels[cluster_indices]
+        unique_emotions, emotion_counts = np.unique(cluster_emotions, return_counts=True)
+        total += np.max(emotion_counts)
     return total / len(labels)
 
 def execute_kmeans(data, k, umbral, labels):
-     kmeans = KMeans(data, k, umbral)
+     kmeans = KMeans(data, 7, umbral)
      centroids, clusters = kmeans.fit()
 
      # Calculate purity
@@ -63,9 +68,8 @@ def execute_kmeans(data, k, umbral, labels):
 
      print(f"Purity = {purity_value}")
 
-     # Save purity to file
-     with open(f"purity_K_{k}_Umbral_{umbral}.txt", "w") as f:
-         f.write(str(purity_value))
+     # Save purity and details to kmeans_results
+     results_kmeans.append([k, umbral, purity_value])
 
      # Evaluate cluster quality
      cluster_labels = np.unique(clusters)
@@ -77,9 +81,53 @@ def execute_kmeans(data, k, umbral, labels):
          print(f"Cluster {label}: Most frequent emotion = {most_frequent_emotion}")
 
      # Plot the results
-     plt.scatter(data_pca[:, 0], data_pca[:, 1], c=clusters)
-    #  plt.show()
-     plt.savefig(f"plot_K_{k}_Umbral_{umbral}.png")
+     plt.figure()
+     plt.scatter(data[:, 0], data[:, 1], c=clusters)
+     plt.scatter(centroids[:, 0], centroids[:, 1], c='red', marker='x')
+     plt.savefig(f"K_means_{k}_Umbral_{umbral}.png")
+
+def execute_dbscan(data, eps, min_samples):
+    dbscan = DBSCAN(eps=eps, min_samples=min_samples)
+    clusters = dbscan.dbscan(data)
+    purity_value = purity(clusters, labels)
+    print(f"Purity = {purity_value}")
+    results_dbscan.append([eps, min_samples, purity_value])
+
+    # Evaluate cluster quality
+    cluster_labels = np.unique(clusters)
+    for label in cluster_labels:
+        cluster_indices = np.where(clusters == label)[0]
+        cluster_emotions = labels[cluster_indices]
+        unique_emotions, emotion_counts = np.unique(cluster_emotions, return_counts=True)
+        most_frequent_emotion = unique_emotions[np.argmax(emotion_counts)]
+        print(f"Cluster {label}: Most frequent emotion = {most_frequent_emotion}")
+    
+    # Plot the results
+    plt.figure()
+    plt.scatter(data[:, 0], data[:, 1], c=clusters)
+    plt.savefig(f"dbscan_eps_{eps}_min_samples_{min_samples}.png")
+
+def execute_gmm(data, iterations):
+    gmm = GMM(n_components=7, n_iter=iterations)
+    gmm.fit(data)
+    clusters = gmm.predict(data)
+    purity_value = purity(clusters, labels)
+    print(f"Purity = {purity_value}")
+    results_gmm.append([iterations, purity_value])
+
+    # Evaluate cluster quality
+    cluster_labels = np.unique(clusters)
+    for label in cluster_labels:
+        cluster_indices = np.where(clusters == label)[0]
+        cluster_emotions = labels[cluster_indices]
+        unique_emotions, emotion_counts = np.unique(cluster_emotions, return_counts=True)
+        most_frequent_emotion = unique_emotions[np.argmax(emotion_counts)]
+        print(f"Cluster {label}: Most frequent emotion = {most_frequent_emotion}")
+    
+    # Plot the results
+    plt.figure()
+    plt.scatter(data[:, 0], data[:, 1], c=clusters)
+    plt.savefig(f"gmm_iterations_{iterations}.png")
 
 if __name__ == "__main__":
     # Set 
@@ -89,15 +137,27 @@ if __name__ == "__main__":
     # Load data
     data_scaled, labels = load_data()
 
-    # Apply PCA
-    pca = PCA(n_components=7)
-    
-    data_pca = pca.fit_transform(data_scaled)
-    execute_kmeans(data_pca, 7, 0.0001, labels)
-    
-    # Apply KMeans
+    # # Apply KMeans
+    # umbral = [0.0001, 0.001, 0.01, 0.1, 1, 10]
+    # dimensions = [2,3,4,5,6,7]
+    # for k in dimensions:
+    #     for u in umbral:
+    #         # Apply PCA
+    #         pca = PCA(n_components=k)
+    #         data_pca = pca.fit_transform(data_scaled)
+    #         execute_kmeans(data_scaled, k, u, labels) 
 
-    umbral = [0.0001, 0.001, 0.01, 0.1, 1, 10]
-    dimensions = [1,2,3,4,5,6,7]
-    
-   
+    # # Save kmeans_results to csv
+    # df = pd.DataFrame(results_kmeans, columns=['K', 'Umbral', 'Purity'])
+    # df.to_csv('kmeans_results.csv', index=False)
+
+    eps = [0.3]
+    min_samples = [3]
+
+    for e in eps:
+        for m in min_samples:
+            execute_dbscan(data_scaled, e, m)
+
+    # Save dbscan_results to csv
+    df = pd.DataFrame(results_dbscan, columns=['Eps', 'Min_samples', 'Purity'])
+    df.to_csv('dbscan_results.csv', index=False)
