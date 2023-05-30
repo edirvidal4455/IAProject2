@@ -159,38 +159,3 @@ if __name__ == "__main__":
     
     df = pd.DataFrame(results_gmm, columns = ['Iterations', 'Purity'])
     df.to_csv('gmm_results.csv', index=False)
-
-    # Ejecutar DBSCAN y obtener los resultados del clustering
-    dbscan = DBScan(epsilon=1, puntos_minimos=3)
-    cluster_labels = dbscan.fit(data)
-
-    #Calcular el purity
-    purity_value = purity(cluster_labels, labels)
-
-    print("Purity:", purity_value)
-    def plot_clusters(data, cluster_labels):
-    # Crear un diccionario para almacenar los puntos de cada cluster
-    clusters = {}
-
-    # Agrupar los puntos según sus etiquetas de cluster
-    for i, label in enumerate(cluster_labels):
-        if label not in clusters:
-            clusters[label] = []
-        clusters[label].append(data[i])
-
-    plt.figure(figsize=(8, 8))
-    colors = cycle('bgrcmyk')
-    for label, points in clusters.items():
-        points = np.array(points)
-        x = points[:, 0]
-        y = points[:, 1]
-
-
-        color = next(colors)
-        plt.scatter(x, y, c=color,)
-    plt.legend()
-    plt.xlabel('X')
-    plt.ylabel('Y')
-    plt.show()
-    plot_clusters(data, cluster_labels)
-    
