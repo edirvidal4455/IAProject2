@@ -160,4 +160,12 @@ if __name__ == "__main__":
     df = pd.DataFrame(results_gmm, columns = ['Iterations', 'Purity'])
     df.to_csv('gmm_results.csv', index=False)
 
+    # Ejecutar DBSCAN y obtener los resultados del clustering
+    dbscan = DBScan(epsilon=1, puntos_minimos=3)
+    cluster_labels = dbscan.fit(data)
+
+    #Calcular el purity
+    purity_value = purity(cluster_labels, labels)
+
+    print("Purity:", purity_value)
     
