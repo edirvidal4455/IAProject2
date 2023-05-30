@@ -159,3 +159,14 @@ if __name__ == "__main__":
     
     df = pd.DataFrame(results_gmm, columns = ['Iterations', 'Purity'])
     df.to_csv('gmm_results.csv', index=False)
+    
+    
+    
+    #save dbscan to csv
+    eps=[0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
+    puntos_minimos=[3,4,5]
+    for i in eps:
+        for j in puntos_minimos:
+            execute_dbscan(data_pca,eps,puntos_minimos)
+    df = pd.DataFrame(results_gmm, columns = ['eps', 'puntos minimos','Purity'])
+    df.to_csv('dbscan_results_.csv', index=False)
