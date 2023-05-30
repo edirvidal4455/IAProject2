@@ -168,5 +168,5 @@ if __name__ == "__main__":
     for i in eps:
         for j in puntos_minimos:
             execute_dbscan(data_pca,eps,puntos_minimos)
-    df = pd.DataFrame(results_gmm, columns = ['eps', 'puntos minimos','Purity'])
+    df = pd.DataFrame(results_gmm, columns = ['eps', i,j])
     df.to_csv('dbscan_results_.csv', index=False)
