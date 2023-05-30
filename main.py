@@ -31,7 +31,7 @@ def load_data():
     for emotion in emotions:
         folder_path = os.path.join(path_file, emotion)
         for file_name in os.listdir(folder_path):
-            if file_name.endswith('.jpg') or file_name.endswith('.png'):
+            if file_name.endswith('.png'):
                 image_path = os.path.join(folder_path, file_name)
                 image_paths.append(image_path)
                 labels.append(emotion)
