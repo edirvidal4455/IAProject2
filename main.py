@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import os
 import pywt
+import statistics as stats
 from kmeans import KMeans
 from gmm import GMM
 from dbscan import DBSCAN
