@@ -137,27 +137,27 @@ if __name__ == "__main__":
     # Load data
     data_scaled, labels = load_data()
 
-    # # Apply KMeans
-    # umbral = [0.0001, 0.001, 0.01, 0.1, 1, 10]
-    # dimensions = [2,3,4,5,6,7]
-    # for k in dimensions:
-    #     for u in umbral:
-    #         # Apply PCA
-    #         pca = PCA(n_components=k)
-    #         data_pca = pca.fit_transform(data_scaled)
-    #         execute_kmeans(data_scaled, k, u, labels) 
+    # Apply KMeans
+    umbral = [0.0001, 0.001, 0.01, 0.1, 1, 10]
+    dimensions = [2,3,4,5,6,7]
+    for k in dimensions:
+        for u in umbral:
+            # Apply PCA
+            pca = PCA(n_components=k)
+            data_pca = pca.fit_transform(data_scaled)
+            execute_kmeans(data_scaled, k, u, labels) 
 
-    # # Save kmeans_results to csv
-    # df = pd.DataFrame(results_kmeans, columns=['K', 'Umbral', 'Purity'])
-    # df.to_csv('kmeans_results.csv', index=False)
+    # Save kmeans_results to csv
+    df = pd.DataFrame(results_kmeans, columns=['K', 'Umbral', 'Purity'])
+    df.to_csv('kmeans_results.csv', index=False)
 
-    eps = [0.3]
-    min_samples = [3]
+    # eps = [0.3]
+    # min_samples = [3]
 
-    for e in eps:
-        for m in min_samples:
-            execute_dbscan(data_scaled, e, m)
+    # for e in eps:
+    #     for m in min_samples:
+    #         execute_dbscan(data_scaled, e, m)
 
-    # Save dbscan_results to csv
-    df = pd.DataFrame(results_dbscan, columns=['Eps', 'Min_samples', 'Purity'])
-    df.to_csv('dbscan_results.csv', index=False)
+    # # Save dbscan_results to csv
+    # df = pd.DataFrame(results_dbscan, columns=['Eps', 'Min_samples', 'Purity'])
+    # df.to_csv('dbscan_results.csv', index=False)
