@@ -47,17 +47,6 @@ class DBScan:
                 vecinos.append(i)
         return vecinos
 
-    @staticmethod
     def distancia(a, b): #calculamos la distancia con euclidiana
         dis = (sum([(a - b) ** 2 for a, b in zip(a,b)]))**0.5
         return dis
-
-
-
-
-# Example usage
-if __name__ == '__main__':
-    dataset = [[1, 1], [1, 2], [2, 1], [10, 10], [10, 11], [11, 10], [20, 20]]
-    dbscan = DBSCAN(eps=3, min_samples=2)
-    labels = dbscan.train(dataset)
-    print(labels)
