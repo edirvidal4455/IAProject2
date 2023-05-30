@@ -127,7 +127,7 @@ def execute_gmm(data, iterations):
     
     # Plot the results
     plt.figure()
-    plt.scatter(data[:, 0], data[:, 1], c=clusters)
+    plt.scatter(data[:, 0], data[:, 1], c=gmm.cluster(data))
     plt.savefig(f"gmm_iterations_{iterations}.png")
 
 if __name__ == "__main__":
