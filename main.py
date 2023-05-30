@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import os
 import pywt
+import statistics as stats
 from kmeans import KMeans
 from gmm import GMM
 from dbscan import DBSCAN
@@ -110,7 +111,7 @@ def execute_dbscan(data, eps, min_samples):
 def execute_gmm(data, iterations):
     gmm = GMM(n_components=7, n_iter=iterations)
     gmm.fit(data)
-    clusters = gmm.predict(data)
+    clusters = np.array(gmm.predict(data))
     purity_value = purity(clusters, labels)
     print(f"Purity = {purity_value}")
     results_gmm.append([iterations, purity_value])
@@ -126,7 +127,7 @@ def execute_gmm(data, iterations):
     
     # Plot the results
     plt.figure()
-    plt.scatter(data[:, 0], data[:, 1], c=clusters)
+    plt.scatter(data[:, 0], data[:, 1], c=gmm.cluster(data))
     plt.savefig(f"gmm_iterations_{iterations}.png")
 
 if __name__ == "__main__":
@@ -161,3 +162,12 @@ if __name__ == "__main__":
     # # Save dbscan_results to csv
     # df = pd.DataFrame(results_dbscan, columns=['Eps', 'Min_samples', 'Purity'])
     # df.to_csv('dbscan_results.csv', index=False)
+    
+    # Save gmm_results to csv
+    ite = [2,3,5,7,10,20]
+    for i in ite:
+        execute_gmm(data_pca,i)
+    
+    df = pd.DataFrame(results_gmm, columns = ['Iterations', 'Purity'])
+    df.to_csv('gmm_results.csv', index=False)
+    
