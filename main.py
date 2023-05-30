@@ -111,7 +111,7 @@ def execute_dbscan(data, eps, min_samples):
 def execute_gmm(data, iterations):
     gmm = GMM(n_components=7, n_iter=iterations)
     gmm.fit(data)
-    clusters = gmm.predict(data)
+    clusters = np.array(gmm.predict(data))
     purity_value = purity(clusters, labels)
     print(f"Purity = {purity_value}")
     results_gmm.append([iterations, purity_value])
@@ -162,3 +162,12 @@ if __name__ == "__main__":
     # Save dbscan_results to csv
     df = pd.DataFrame(results_dbscan, columns=['Eps', 'Min_samples', 'Purity'])
     df.to_csv('dbscan_results.csv', index=False)
+    
+    # Save gmm_results to csv
+    ite = [2,3,5,7,10,20]
+    for i in ite:
+        execute_gmm(data_pca,i)
+    
+    df = pd.DataFrame(results_gmm, columns = ['Iterations', 'Purity'])
+    df.to_csv('gmm_results.csv', index=False)
+    
